@@ -1,4 +1,8 @@
-# Thanatchanan Portfolio
+
+# 👋 Thanatchanan Portfolio
+
+🌐 **Live Portfolio:**  
+### 👉 https://natchanan001.github.io
 
 A responsive React + Vite portfolio starter designed for deployment as a GitHub user site.
 
