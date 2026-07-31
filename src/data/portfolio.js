@@ -29,7 +29,7 @@ export const projects = [
       "Figma",
     ],
     image: "/images/carekids/bam.png",
-    liveUrl1: "https://canva.link/nev11vrbvwzusk0",
+    liveUrl: "https://canva.link/nev11vrbvwzusk0",
     liveUrl2: "https://canva.link/g9af6ukheyngtk0",
     repoUrl: "https://github.com/Natchanan001/Carekids.git",
   },
