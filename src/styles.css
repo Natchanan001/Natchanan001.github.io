@@ -304,9 +304,9 @@ h2 {
 }
 
 .project-image {
-  background: #0b2942;
+  width: 100%;
+  height: 420px;   /* หรือความสูงที่พสใช้ */
   overflow: hidden;
-  padding: 16px;
 }
 
 /* Highlighted senior/capstone project */
