@@ -29,8 +29,9 @@ export const projects = [
       "Figma",
     ],
     image: "/images/carekids/bam.png",
-    liveUrl: "",
-    repoUrl: "",
+    liveUrl1: "https://canva.link/nev11vrbvwzusk0",
+    liveUrl2: "https://canva.link/g9af6ukheyngtk0",
+    repoUrl: "https://github.com/Natchanan001/Carekids.git",
   },
   {
     number: "02",
@@ -49,7 +50,7 @@ export const projects = [
     ],
     image: "/images/uponatime/uponweb.jpeg",
     liveUrl: "",
-    repoUrl: "",
+    repoUrl: "https://github.com/Natchanan001/term-project-section-701-999-1.git",
   },
   {
     number: "03",
@@ -66,7 +67,7 @@ export const projects = [
       "Prototype",
     ],
     image: "/images/draoi/draoihifi.jpeg",
-    liveUrl: "",
+    liveUrl: "https://canva.link/05k30r7x6go5q3b",
     repoUrl: "",
   },
 ];

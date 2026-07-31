@@ -1,9 +1,18 @@
 import { ArrowUpRight, Sparkles } from "lucide-react";
 
 export default function ProjectCard({ project }) {
-  const hasValidLiveUrl = project.liveUrl && project.liveUrl !== "#";
+  const hasValidUrl = (url) => Boolean(url && url !== "#");
 
-  const hasValidRepoUrl = project.repoUrl && project.repoUrl !== "#";
+  const hasValidLiveUrl = hasValidUrl(project.liveUrl);
+  const hasValidLiveUrl1 = hasValidUrl(project.liveUrl1);
+  const hasValidLiveUrl2 = hasValidUrl(project.liveUrl2);
+  const hasValidRepoUrl = hasValidUrl(project.repoUrl);
+
+  const hasAnyLink =
+    hasValidLiveUrl ||
+    hasValidLiveUrl1 ||
+    hasValidLiveUrl2 ||
+    hasValidRepoUrl;
 
   return (
     <article className={`project-card ${project.featured ? "featured" : ""}`}>
@@ -16,7 +25,10 @@ export default function ProjectCard({ project }) {
         )}
 
         {project.image ? (
-          <img src={project.image} alt={`${project.title} preview`} />
+          <img
+            src={project.image}
+            alt={`${project.title} project preview`}
+          />
         ) : (
           <div className="image-placeholder">
             <span>{project.number}</span>
@@ -40,9 +52,10 @@ export default function ProjectCard({ project }) {
                 </span>
               )}
             </div>
+
             {project.role && (
               <p className="project-role">
-                <span>My Role: </span>
+                <span>My Role:</span>
                 {project.role}
               </p>
             )}
@@ -53,23 +66,55 @@ export default function ProjectCard({ project }) {
 
         <p className="project-description">{project.description}</p>
 
-        <div className="tags">
-          {project.stack.map((item) => (
-            <span key={item}>{item}</span>
-          ))}
-        </div>
+        {project.stack?.length > 0 && (
+          <div className="tags">
+            {project.stack.map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
+        )}
 
-        {(hasValidLiveUrl || hasValidRepoUrl) && (
+        {hasAnyLink && (
           <div className="project-links">
             {hasValidLiveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noreferrer">
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
                 View project
                 <ArrowUpRight size={16} />
               </a>
             )}
 
+            {hasValidLiveUrl1 && (
+              <a
+                href={project.liveUrl1}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View presentation
+                <ArrowUpRight size={16} />
+              </a>
+            )}
+
+            {hasValidLiveUrl2 && (
+              <a
+                href={project.liveUrl2}
+                target="_blank"
+                rel="noreferrer"
+              >
+                View prototype
+                <ArrowUpRight size={16} />
+              </a>
+            )}
+
             {hasValidRepoUrl && (
-              <a href={project.repoUrl} target="_blank" rel="noreferrer">
+              <a
+                href={project.repoUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
                 View code
                 <ArrowUpRight size={16} />
               </a>
