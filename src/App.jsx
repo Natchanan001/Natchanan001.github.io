@@ -1,3 +1,8 @@
+import CommandPalette from './components/CommandPalette';
+import CareKidsCaseStudy from './components/CareKidsCaseStudy';
+import Workflow from './components/Workflow';
+import { useEffect, useState } from 'react';
+import RecruiterView from './components/RecruiterView';
 import {
   ArrowDown,
   ArrowUpRight,
@@ -10,18 +15,68 @@ import ProjectCard from "./components/ProjectCard";
 import { profile, projects, skills } from "./data/portfolio";
 
 function App() {
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'light');
+  const [category, setCategory] = useState('All');
+  const [commandOpen, setCommandOpen] = useState(false);
+  useEffect(() => {
+    const handleShortcut = event => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault(); setCommandOpen(open => !open);
+      }
+    };
+    document.addEventListener('keydown', handleShortcut);
+    return () => document.removeEventListener('keydown', handleShortcut);
+  }, []);
+  useEffect(() => {
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) { entry.target.classList.add('is-revealed'); observer.unobserve(entry.target); }
+      });
+    }, { threshold: 0.05 });
+    document.querySelectorAll('.section-title, .project-card, .case-header').forEach(element => observer.observe(element));
+    return () => observer.disconnect();
+  }, [category]);
+  useEffect(() => {
+    const restoreProject = () => {
+      if (location.hash.startsWith('#project-')) {
+        setCategory('All');
+        requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'instant' }));
+      }
+    };
+    window.addEventListener('hashchange', restoreProject);
+    return () => window.removeEventListener('hashchange', restoreProject);
+  }, []);
+  function navigate(href) {
+    setCategory('All');
+    setCommandOpen(false);
+    requestAnimationFrame(() => {
+      location.hash = href;
+      const destination = document.getElementById(href.slice(1));
+      destination?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      destination?.setAttribute('tabindex', '-1');
+      destination?.focus({ preventScroll: true });
+    });
+  }
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try { localStorage.setItem('portfolio-theme', theme); } catch { /* Storage is optional. */ }
+  }, [theme]);
+  const filteredProjects = projects.filter(p => category === 'All' || p.categories.includes(category));
   return (
     <div id="top">
-      <Navbar />
+      <a className="skip-link" href="#main">Skip to content</a>
+      <Navbar theme={theme} onThemeChange={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} onSearch={() => setCommandOpen(true)} />
 
-      <main>
+      <main id="main" tabIndex={-1}>
         {/* Hero */}
         <section className="hero container">
           <div className="hero-kicker">
             <span />
-            Available for internship opportunities
+            {profile.availability}
           </div>
 
+          <p className="hero-intro">{profile.name} · Mobile & Web Developer</p>
           <h1>
             Building digital products with
             <em> clarity, care, and purpose.</em>
@@ -36,6 +91,7 @@ function App() {
                 <ArrowDown size={17} />
               </a>
 
+              <a className="button text" href={`mailto:${profile.email}`}>Let's talk <Mail size={17}/></a>
               {profile.resume && profile.resume !== "#" && (
                 <a
                   className="button text"
@@ -62,13 +118,7 @@ function App() {
           </div>
         </section>
 
-        {/* Moving skills banner */}
-        <section className="marquee" aria-label="Skills overview">
-          <div>
-            FLUTTER ✦ DART ✦ SUPABASE ✦ FIGMA ✦ VUE.JS ✦ UI/UX ✦
-            FLUTTER ✦ DART ✦ SUPABASE ✦ FIGMA ✦ VUE.JS ✦ UI/UX ✦
-          </div>
-        </section>
+        <div className="expertise-strip container" aria-label="Explore work by discipline">{[['Mobile', 'Mobile applications'], ['Web', 'Web development'], ['UX/UI', 'UX/UI design']].map(([value, label]) => <button key={value} onClick={() => { setCategory(value); document.getElementById('work')?.scrollIntoView(); }}>{label}<ArrowUpRight size={16}/></button>)}</div>
 
         {/* Projects */}
         <section id="work" className="section container">
@@ -82,8 +132,10 @@ function App() {
             </h2>
           </div>
 
+          <div className="project-filters" aria-label="Filter projects">{['All', 'Mobile', 'Web', 'UX/UI', 'Full-stack'].map(value => <button key={value} aria-pressed={category === value} onClick={() => setCategory(value)}>{value}<span>{value === 'All' ? projects.length : projects.filter(p => p.categories.includes(value)).length}</span></button>)}</div>
+          <p className="filter-status muted" role="status">{filteredProjects.length} {filteredProjects.length === 1 ? 'project' : 'projects'}{category !== 'All' ? ` · ${category}` : ''}</p>
           <div className="projects-grid">
-            {projects.map((project) => (
+            {filteredProjects.map((project) => (
               <ProjectCard
                 key={project.number}
                 project={project}
@@ -91,6 +143,10 @@ function App() {
             ))}
           </div>
         </section>
+
+        <CareKidsCaseStudy />
+        <Workflow />
+        <RecruiterView />
 
         {/* About */}
         <section id="about" className="section about-section">
@@ -116,7 +172,7 @@ function App() {
                 My experience covers the full product process, including user
                 research, wireframing, high-fidelity prototyping, frontend
                 development, database integration, authentication, and
-                real-time synchronization.
+                shared application data.
               </p>
 
               <p>
@@ -225,6 +281,7 @@ function App() {
           </div>
         </section>
       </main>
+      {commandOpen && <CommandPalette onClose={() => setCommandOpen(false)} onNavigate={navigate} />}
     </div>
   );
 }
