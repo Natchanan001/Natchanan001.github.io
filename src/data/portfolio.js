@@ -8,19 +8,26 @@ export const profile = {
   email: 'Natchanank003@gmail.com',
   github: 'https://github.com/Natchanan001',
   linkedin: 'https://www.linkedin.com/in/natchanan-bamm-40ba54424/',
-  resume: '#',
+  resume: '',
+  availability: 'Available for internship opportunities',
+  preferredRoles: ['Mobile Developer', 'Frontend Developer', 'UX/UI Designer'],
+  portfolio: 'https://natchanan001.github.io/',
 }
 
 export const projects = [
   {
     number: "01",
+    id: "carekids",
+    categories: ["Mobile", "UX/UI", "Full-stack"],
+    caseStudy: "#carekids",
+    liveLabel: "Presentation",
     title: "CareKids",
     category: "Cross-platform Mobile Application",
     role: "Lead Mobile Application Developer & UX/UI Designer",
     badge: "Senior Project",
     featured: true,
     description:
-      "A pediatric healthcare management application designed for families with multiple caregivers. CareKids provides real-time medication synchronization, weight-based dosage calculation, separate child profiles, and an intuitive visual interface for elderly or non-technical caregivers.",
+      "A pediatric healthcare management application designed for families with multiple caregivers. CareKids provides shared medication records, weight-based dosage calculation, separate child profiles, and an intuitive visual interface for elderly or non-technical caregivers.",
     stack: [
       "Flutter",
       "Dart",
@@ -35,6 +42,8 @@ export const projects = [
   },
   {
     number: "02",
+    id: "uponatime",
+    categories: ["Web", "UX/UI"],
     title: "UponAtime",
     category: "E-Commerce Website",
     role: "Lead Frontend Developer & UX/UI Designer",
@@ -54,6 +63,9 @@ export const projects = [
   },
   {
     number: "03",
+    id: "draoi",
+    categories: ["UX/UI"],
+    liveLabel: "Design case study",
     title: "DrAOI",
     category: "UX/UI Case Study",
     role: "UX/UI Designer",

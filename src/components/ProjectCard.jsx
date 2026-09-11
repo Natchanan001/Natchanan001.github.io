@@ -1,21 +1,14 @@
+import ProjectActions from './ProjectActions';
+import { useState } from 'react';
+import Modal from './Modal';
+import { Expand } from 'lucide-react';
 import { ArrowUpRight, Sparkles } from "lucide-react";
 
 export default function ProjectCard({ project }) {
-  const hasValidUrl = (url) => Boolean(url && url !== "#");
-
-  const hasValidLiveUrl = hasValidUrl(project.liveUrl);
-  const hasValidLiveUrl1 = hasValidUrl(project.liveUrl1);
-  const hasValidLiveUrl2 = hasValidUrl(project.liveUrl2);
-  const hasValidRepoUrl = hasValidUrl(project.repoUrl);
-
-  const hasAnyLink =
-    hasValidLiveUrl ||
-    hasValidLiveUrl1 ||
-    hasValidLiveUrl2 ||
-    hasValidRepoUrl;
-
+  const [preview, setPreview] = useState(false);
   return (
-    <article className={`project-card ${project.featured ? "featured" : ""}`}>
+    <>
+    <article id={`project-${project.id}`} className={`project-card ${project.featured ? "featured" : ""}`}>
       <div className="project-visual">
         {project.featured && (
           <span className="featured-label">
@@ -25,10 +18,11 @@ export default function ProjectCard({ project }) {
         )}
 
         {project.image ? (
-          <img
+          <button className="project-preview-button" aria-label={`Enlarge ${project.title} screenshot`} onClick={() => setPreview(true)}><img
             src={project.image}
+            loading="lazy" decoding="async" width="960" height="720"
             alt={`${project.title} project preview`}
-          />
+          /><span><Expand size={16}/> View screenshot</span></button>
         ) : (
           <div className="image-placeholder">
             <span>{project.number}</span>
@@ -74,54 +68,10 @@ export default function ProjectCard({ project }) {
           </div>
         )}
 
-        {hasAnyLink && (
-          <div className="project-links">
-            {hasValidLiveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View project
-                <ArrowUpRight size={16} />
-              </a>
-            )}
-
-            {hasValidLiveUrl1 && (
-              <a
-                href={project.liveUrl1}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View presentation
-                <ArrowUpRight size={16} />
-              </a>
-            )}
-
-            {hasValidLiveUrl2 && (
-              <a
-                href={project.liveUrl2}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View prototype
-                <ArrowUpRight size={16} />
-              </a>
-            )}
-
-            {hasValidRepoUrl && (
-              <a
-                href={project.repoUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View code
-                <ArrowUpRight size={16} />
-              </a>
-            )}
-          </div>
-        )}
+        <ProjectActions project={project} />
       </div>
     </article>
+    {preview && <Modal title={`${project.title} screenshot`} onClose={() => setPreview(false)} className="image-modal"><img src={project.image} alt={`${project.title} interface overview`}/><a className="inline-link" href={project.image} target="_blank" rel="noreferrer">Open full-resolution image <ArrowUpRight size={16}/></a></Modal>}
+    </>
   );
 }
